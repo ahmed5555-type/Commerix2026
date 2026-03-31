@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Commerix | منصة تعليم المحاسبة الرقمية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        /* ============================================
+           GLOBAL STYLES & RESET
+        ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           ANIMATED BACKGROUND
+        ============================================ */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(125deg, #0f0c29, #302b63, #24243e);
+            overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: floatOrb 18s infinite alternate ease-in-out;
+        }
+
+        .orb1 { width: 500px; height: 500px; background: #ff4d6d; top: -150px; right: -150px; animation-duration: 20s; }
+        .orb2 { width: 600px; height: 600px; background: #4d9eff; bottom: -200px; left: -200px; animation-duration: 25s; animation-delay: -5s; }
+        .orb3 { width: 400px; height: 400px; background: #9b5de5; top: 50%; left: 30%; animation-duration: 22s; animation-delay: -2s; }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 80px) scale(1.2); }
+        }
+
+        #particlesCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ============================================
+           LOCK SCREEN STYLES
+        ============================================ */
+        .lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 12, 41, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .lock-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.96);
+            backdrop-filter: blur(0px);
+        }
+
+        .lock-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 48px;
+            padding: 50px 45px;
+            width: 90%;
+            max-width: 460px;
+            text-align: center;
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.25);
+            animation: fadeInScale 0.6s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo-icon {
+            width: 95px;
+            height: 95px;
+            background: linear-gradient(135deg, #ffffff20, #ffffff08);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 48px;
+            color: rgb(255, 246, 246);
+            animation: floatLogo 3s infinite alternate, glowPulse 2s infinite;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        @keyframes floatLogo {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-12px) rotate(3deg); }
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.5); }
+            100% { box-shadow: 0 0 0 15px rgba(102, 126, 234, 0); }
+        }
+
+        h1 {
+            font-size: 34px;
+            background: linear-gradient(135deg, #fdf9f9, #c0b9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: rgba(147, 255, 6, 0.85);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px 5px;
+            border: 1.5px solid rgba(255,255,255,0.4);
+            border-radius: 60px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            background: rgba(0,0,0,0.2);
+            color: rgb(255, 255, 255);
+            backdrop-filter: blur(4px);
+        }
+
+        .role-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .role-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #eee;
+            font-weight: 500;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 60px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #a77eff;
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 0 12px rgba(167,126,255,0.4);
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ddd;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: bold;
+            color: rgb(255, 255, 255);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .error-message {
+            background: #ff4d4d33;
+            color: #ffcaca;
+            border-radius: 50px;
+            padding: 8px;
+            display: none;
+            margin-bottom: 15px;
+        }
+
+        .security-note {
+            color: #f1f1f1;
+            font-size: 11px;
+        }
+
+        /* ============================================
+           MAIN APP CONTAINER
+        ============================================ */
+        .app-container {
+            display: none;
+            background: transparent;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 12px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            flex-wrap: wrap;
+        }
+
+        .logo h2 {
+            background: linear-gradient(135deg, #fdfcfc, #cbb2ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 26px;
+        }
+
+        .logo p {
+            font-size: 10px;
+            color: #fff7f7;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            cursor: pointer;
+            padding: 8px 18px;
+            color: #f0f0f0;
+            font-weight: 500;
+            border-radius: 40px;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .logout-btn {
+            background: rgba(231, 76, 60, 0.85);
+            backdrop-filter: blur(4px);
+            border: none;
+            padding: 8px 22px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e74c3c;
+            transform: translateY(-2px);
+        }
+
+        .page {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page.hidden {
+            display: none;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px 30px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            flex-wrap: wrap;
+            margin-top: 45px;
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(4px);
+            padding: 18px 30px;
+            border-radius: 30px;
+        }
+
+        .stat-number {
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        /* Subjects Grid */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .subject-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow: hidden;
+            cursor: pointer;
+            padding: 22px;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 30px 40px -15px rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .subject-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .subject-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .subject-description {
+            color: #ddd;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background: #2c2c54;
+            height: 6px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 5px;
+        }
+
+        .stats-info {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 13px;
+        }
+
+        /* Videos & PDFs Section */
+        .section-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+
+        .section-tab {
+            padding: 10px 25px;
+            background: transparent;
+            border: none;
+            color: #ccc;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 30px;
+        }
+
+        .section-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .section-tab:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .videos-grid, .pdfs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 28px;
+            margin-top: 20px;
+        }
+
+        .video-card, .pdf-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s;
+            overflow: hidden;
+        }
+
+        .video-card:hover, .pdf-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.4);
+        }
+
+        .video-thumbnail, .pdf-thumbnail {
+            position: relative;
+            height: 180px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pdf-thumbnail {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .pdf-thumbnail i {
+            font-size: 60px;
+            color: white;
+        }
+
+        .pdf-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: white;
+        }
+
+        .video-play, .pdf-view {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .video-card:hover .video-play,
+        .pdf-card:hover .pdf-view {
+            transform: translate(-50%, -50%) scale(1.2);
+            background: rgb(255, 255, 255);
+        }
+
+        .video-card:hover .video-play i,
+        .pdf-card:hover .pdf-view i {
+            color: #000;
+        }
+
+        .video-content, .pdf-content {
+            padding: 18px;
+        }
+
+        .video-title, .pdf-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .pdf-size {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .youtube-link, .pdf-download {
+            display: block;
+            margin-top: 12px;
+            text-align: center;
+            padding: 8px;
+            border-radius: 40px;
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .youtube-link {
+            background: #ff0000;
+        }
+
+        .pdf-download {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .youtube-link:hover, .pdf-download:hover {
+            transform: scale(0.98);
+            filter: brightness(1.05);
+        }
+
+        .complete-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 40px;
+            border: none;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .complete-btn.completed {
+            background: #95a5a6;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
+        /* PDF Viewer Modal */
+        .pdf-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .pdf-modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            margin: 2% auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pdf-modal-header {
+            padding: 15px 20px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pdf-modal-header h3 {
+            margin: 0;
+        }
+
+        .close-pdf {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .pdf-viewer-container {
+            flex: 1;
+            overflow: auto;
+            background: #f1f1f1;
+            padding: 20px;
+        }
+
+        canvas {
+            margin: 0 auto;
+            display: block;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-header h2 {
+            color: white;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-stats {
+            display: flex;
+            gap: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        .admin-stat {
+            color: rgb(255, 255, 255);
+            font-size: 14px;
+        }
+
+        .admin-stat span {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 18px;
+            margin-left: 5px;
+        }
+
+        .admin-card {
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card-title {
+            color: rgb(255, 255, 255);
+            font-size: 22px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-right: 4px solid #667eea;
+            padding-right: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group label i {
+            margin-left: 6px;
+            color: #667eea;
+        }
+
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 18px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-group textarea {
+            border-radius: 20px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .file-input {
+            padding: 8px !important;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: rgb(255, 255, 255);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: rgb(255, 255, 255);
+            padding: 12px 30px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.8);
+            color: white;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .pdfs-table-wrapper, .videos-table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+        }
+
+        .pdfs-table, .videos-table {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .pdfs-table th, .pdfs-table td,
+        .videos-table th, .videos-table td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #f0f0f0;
+        }
+
+        .pdfs-table th, .videos-table th {
+            background: rgba(102, 126, 234, 0.3);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .pdfs-table tr:hover, .videos-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-icon {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-edit {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-view {
+            background: #3498db;
+            color: white;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .lock-container {
+                padding: 35px 25px;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="bg-orb orb1"></div>
+        <div class="bg-orb orb2"></div>
+        <div class="bg-orb orb3"></div>
+    </div>
+    <canvas id="particlesCanvas"></canvas>
+
+    <!-- Lock Screen -->
+    <div class="lock-screen" id="lockScreen">
+        <div class="lock-container">
+            <div class="logo-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h1>Commerix</h1>
+            <p class="tagline">منصة تعليم المحاسبة الرقمية</p>
+            
+            <div class="role-buttons">
+                <button class="role-btn student active" onclick="selectRole('student')">
+                    <i class="fas fa-user-graduate"></i> طالب
+                </button>
+                <button class="role-btn admin" onclick="selectRole('admin')">
+                    <i class="fas fa-user-tie"></i> مدير
+                </button>
+            </div>
+            
+            <div class="input-group">
+                <label>كلمة المرور</label>
+                <div class="password-container">
+                    <input type="password" id="password" class="password-input" placeholder="••••••••">
+                    <button class="toggle-password" onclick="togglePassword()">
+                        <i class="far fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button class="login-btn" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> دخول
+            </button>
+            
+            <div class="error-message" id="errorMsg">
+                <i class="fas fa-exclamation-circle"></i> كلمة المرور غير صحيحة
+            </div>
+            
+            <div class="security-note">
+                <i class="fas fa-shield-alt"></i> نظام تعليمي آمن
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <div class="navbar">
+            <div class="logo">
+                <h2><i class="fas fa-chart-line"></i> Commerix</h2>
+                <p>تعليم بلا حدود</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a class="nav-link active" onclick="showPage('home')">الرئيسية</a></li>
+                <li><a class="nav-link" onclick="showPage('subjects')">المواد</a></li>
+                <li><a class="nav-link" onclick="showPage('about')">عن المنصة</a></li>
+            </ul>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        </div>
+
+        <div id="studentPages">
+            <div id="homePage" class="page">
+                <div class="hero">
+                    <h1>مرحباً بك في Commerix</h1>
+                    <p>منصة متخصصة في تعليم المحاسبة بأحدث الطرق</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-number" id="totalSubjects">0</div>
+                            <div>مواد دراسية</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="totalVideos">0</div>
+                            <div>فيديو تعليمي</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="totalPDFs">0</div>
+                            <div>ملفات PDF</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="completedCount">0</div>
+                            <div>فيديو مكتمل</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subjectsPage" class="page hidden">
+                <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-right"></i> العودة</button>
+                <h2 style="color: rgb(255, 255, 255); margin-bottom: 25px;">المواد الدراسية</h2>
+                <div class="subjects-grid" id="subjectsGrid"></div>
+            </div>
+
+            <div id="subjectDetailPage" class="page hidden">
+                <button class="back-btn" onclick="showPage('subjects')"><i class="fas fa-arrow-right"></i> العودة للمواد</button>
+                <div id="subjectDetail" style="color: white;"></div>
+                
+                <!-- Tabs for Videos and PDFs -->
+                <div class="section-tabs">
+                    <button class="section-tab active" onclick="switchTab('videos')">
+                        <i class="fas fa-video"></i> الفيديوهات
+                    </button>
+                    <button class="section-tab" onclick="switchTab('pdfs')">
+                        <i class="fas fa-file-pdf"></i> الملفات PDF
+                    </button>
+                </div>
+                
+                <div id="videosSection" class="section-content active">
+                    <div class="videos-grid" id="videosGrid"></div>
+                </div>
+                
+                <div id="pdfsSection" class="section-content">
+                    <div class="pdfs-grid" id="pdfsGrid"></div>
+                </div>
+            </div>
+
+            <div id="aboutPage" class="page hidden">
+                <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-right"></i> العودة</button>
+                <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(16px); padding: 40px; border-radius: 40px;">
+                    <h2 style="color: white;">عن منصة Commerix</h2>
+                    <p style="margin-top: 15px; line-height: 1.8; color: #f0f0f0;">منصة تعليمية متخصصة في مجال المحاسبة والعلوم المالية، تقدم محتوى تعليمي متميز بأسلوب عصري يواكب متطلبات سوق العمل.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" style="display: none;">
+            <div class="admin-panel">
+                <div class="admin-header">
+                    <h2><i class="fas fa-crown"></i> لوحة تحكم المدير</h2>
+                    <div class="admin-stats">
+                        <div class="admin-stat"><span id="adminTotalVideos">0</span> فيديو</div>
+                        <div class="admin-stat"><span id="adminTotalPDFs">0</span> PDF</div>
+                        <div class="admin-stat"><span id="adminTotalSubjects">7</span> مادة</div>
+                    </div>
+                </div>
+
+                <!-- Add Video Form -->
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-video-plus"></i>
+                        <span id="formTitle">إضافة فيديو جديد</span>
+                    </div>
+                    <form id="videoForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label><i class="fas fa-book"></i> المادة الدراسية</label>
+                                <select id="subjectSelect" required>
+                                    <option value="">اختر المادة</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-tag"></i> عنوان الفيديو</label>
+                                <input type="text" id="videoTitle" placeholder="مثال: مقدمة في المحاسبة" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label><i class="fas fa-align-right"></i> وصف الفيديو</label>
+                                <textarea id="videoDesc" placeholder="وصف مختصر لمحتوى الفيديو..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-youtube"></i> رابط YouTube</label>
+                                <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+                                <div class="url-preview" id="urlPreview">
+                                    <i class="fas fa-link"></i>
+                                    <span>رابط الفيديو</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="far fa-clock"></i> المدة</label>
+                                <input type="text" id="videoDuration" placeholder="مثال: 15:30">
+                            </div>
+                        </div>
+                        <input type="hidden" id="editVideoId">
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> حفظ الفيديو
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="clearVideoForm()">
+                                <i class="fas fa-undo-alt"></i> إلغاء
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Add PDF Form -->
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>إضافة ملف PDF</span>
+                    </div>
+                    <form id="pdfForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label><i class="fas fa-book"></i> المادة الدراسية</label>
+                                <select id="pdfSubjectSelect" required>
+                                    <option value="">اختر المادة</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-tag"></i> عنوان الملف</label>
+                                <input type="text" id="pdfTitle" placeholder="مثال: ملخص المحاسبة" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label><i class="fas fa-align-right"></i> وصف الملف</label>
+                                <textarea id="pdfDesc" placeholder="وصف مختصر لمحتوى الملف..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-upload"></i> ملف PDF</label>
+                                <input type="file" id="pdfFile" accept=".pdf" class="file-input">
+                                <small style="color:#aaa;">اختر ملف PDF من جهازك</small>
+                            </div>
+                        </div>
+                        <input type="hidden" id="editPdfId">
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-upload"></i> رفع الملف
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="clearPdfForm()">
+                                <i class="fas fa-undo-alt"></i> إلغاء
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Videos List -->
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-list-ul"></i>
+                        قائمة الفيديوهات التعليمية
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" id="searchVideo" class="search-input" placeholder="🔍 بحث في الفيديوهات...">
+                        <select id="filterSubjectVideo" class="search-input" style="width: auto; min-width: 150px;">
+                            <option value="all">جميع المواد</option>
+                        </select>
+                    </div>
+                    <div class="videos-table-wrapper">
+                        <div id="videosTable"></div>
+                    </div>
+                </div>
+
+                <!-- PDFs List -->
+                <div class="admin-card">
+                    <div class="card-title">
+                        <i class="fas fa-file-pdf"></i>
+                        قائمة ملفات PDF
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" id="searchPdf" class="search-input" placeholder="🔍 بحث في الملفات...">
+                        <select id="filterSubjectPdf" class="search-input" style="width: auto; min-width: 150px;">
+                            <option value="all">جميع المواد</option>
+                        </select>
+                    </div>
+                    <div class="pdfs-table-wrapper">
+                        <div id="pdfsTable"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdfModal" class="pdf-modal">
+        <div class="pdf-modal-content">
+            <div class="pdf-modal-header">
+                <h3 id="pdfModalTitle">معاينة الملف</h3>
+                <button class="close-pdf" onclick="closePdfModal()">&times;</button>
+            </div>
+            <div class="pdf-viewer-container" id="pdfViewerContainer">
+                <canvas id="pdfCanvas"></canvas>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="prevPage()" class="btn-secondary"><i class="fas fa-chevron-right"></i> السابق</button>
+                    <span id="pageNumInfo" style="margin: 0 15px; color: #333;">الصفحة 1 / 1</span>
+                    <button onclick="nextPage()" class="btn-secondary">التالي <i class="fas fa-chevron-left"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configure PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        
+        // Subjects Data with PDFs
+        let subjects = {
+            insurance: { id: 'insurance', name: 'مادة التأمين', icon: '🛡️', description: 'دراسة أنواع التأمين وأساسيات العقود التأمينية', videos: [], pdfs: [] },
+            managerial: { id: 'managerial', name: 'المحاسبة الإدارية', icon: '📊', description: 'تحليل التكاليف والموازنات التخطيطية', videos: [], pdfs: [] },
+            materials: { id: 'materials', name: 'إدارة مواد وامداد', icon: '📦', description: 'إدارة سلاسل التوريد والمخزون', videos: [], pdfs: [] },
+            economy: { id: 'economy', name: 'اقتصاد دولي', icon: '🌍', description: 'النظريات الاقتصادية والتجارة الدولية', videos: [], pdfs: [] },
+            tax: { id: 'tax', name: 'مبادئ المحاسبة الضريبية', icon: '🏛️', description: 'أساسيات الضرائب والإقرارات', videos: [], pdfs: [] },
+            audit: { id: 'audit', name: 'مبادئ الرقابة والمراجعة', icon: '🔍', description: 'مفاهيم التدقيق والرقابة الداخلية', videos: [], pdfs: [] },
+            hr: { id: 'hr', name: 'إدارة الموارد البشرية', icon: '👥', description: 'تخطيط الموارد البشرية والتقييم', videos: [], pdfs: [] }
+        };
+
+        // Sample PDFs data
+        const samplePDFs = {
+            insurance: [{ id: 'pdf1', title: 'دليل التأمين الشامل', description: 'دليل شامل لمبادئ التأمين', fileName: 'insurance_guide.pdf', size: '2.5 MB', url: '', data: null }],
+            managerial: [{ id: 'pdf2', title: 'أساسيات المحاسبة الإدارية', description: 'شرح مفاهيم التكاليف والموازنات', fileName: 'managerial_basics.pdf', size: '1.8 MB', url: '', data: null }],
+            tax: [{ id: 'pdf3', title: 'دليل الضرائب', description: 'شرح النظام الضريبي', fileName: 'tax_guide.pdf', size: '3.2 MB', url: '', data: null }]
+        };
+
+        let currentSubjectId = null;
+        let currentPdfDoc = null;
+        let currentPage = 1;
+        let currentPdfData = null;
+
+        function loadData() {
+            const saved = localStorage.getItem('commerix_full_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                subjects = data.subjects;
+            } else {
+                // Add sample videos
+                const defaultVideos = {
+                    insurance: [{ id: 1, title: 'مقدمة في علم التأمين', desc: 'تعريف التأمين وأهميته', duration: '18:30', url: 'https://www.youtube.com/watch?v=ELdHx0N1PDo', completed: false, difficulty: 'مبتدئ', views: 0 }],
+                    managerial: [{ id: 3, title: 'مقدمة في المحاسبة الإدارية', desc: 'الفرق بين المحاسبة المالية والإدارية', duration: '15:45', url: 'https://www.youtube.com/watch?v=Zw5I2vKXZ_k', completed: false, difficulty: 'متوسط', views: 0 }],
+                    materials: [{ id: 5, title: 'إدارة سلاسل التوريد', desc: 'مقدمة في إدارة سلسلة الإمداد', duration: '20:00', url: 'https://www.youtube.com/watch?v=5wYHFTsVZvE', completed: false, difficulty: 'متوسط', views: 0 }],
+                    economy: [{ id: 6, title: 'مقدمة في الاقتصاد الدولي', desc: 'أساسيات التجارة الدولية', duration: '19:15', url: 'https://www.youtube.com/watch?v=Zw5I2vKXZ_k', completed: false, difficulty: 'مبتدئ', views: 0 }],
+                    tax: [{ id: 7, title: 'أساسيات الضرائب', desc: 'مفهوم الضريبة وأنواعها', duration: '16:45', url: 'https://www.youtube.com/watch?v=ELdHx0N1PDo', completed: false, difficulty: 'متوسط', views: 0 }],
+                    audit: [{ id: 8, title: 'مقدمة في المراجعة', desc: 'تعريف المراجعة وأهدافها', duration: '21:30', url: 'https://www.youtube.com/watch?v=5wYHFTsVZvE', completed: false, difficulty: 'متقدم', views: 0 }],
+                    hr: [{ id: 9, title: 'إدارة الموارد البشرية', desc: 'أهمية إدارة الموارد البشرية', duration: '17:20', url: 'https://www.youtube.com/watch?v=Zw5I2vKXZ_k', completed: false, difficulty: 'مبتدئ', views: 0 }]
+                };
+                
+                for (let id in subjects) {
+                    subjects[id].videos = defaultVideos[id] || [];
+                    subjects[id].pdfs = samplePDFs[id] || [];
+                }
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('commerix_full_data', JSON.stringify({ subjects: subjects }));
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function updateStats() {
+            let totalVideos = 0, totalPDFs = 0, completedVideos = 0;
+            Object.values(subjects).forEach(subject => {
+                totalVideos += subject.videos.length;
+                totalPDFs += subject.pdfs.length;
+                completedVideos += subject.videos.filter(v => v.completed).length;
+            });
+            document.getElementById('totalSubjects').innerText = Object.keys(subjects).length;
+            document.getElementById('totalVideos').innerText = totalVideos;
+            document.getElementById('totalPDFs').innerText = totalPDFs;
+            document.getElementById('completedCount').innerText = completedVideos;
+            
+            if (document.getElementById('adminTotalVideos')) {
+                document.getElementById('adminTotalVideos').innerText = totalVideos;
+                document.getElementById('adminTotalPDFs').innerText = totalPDFs;
+                document.getElementById('adminTotalSubjects').innerText = Object.keys(subjects).length;
+            }
+        }
+
+        function renderSubjects() {
+            const grid = document.getElementById('subjectsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            Object.values(subjects).forEach(subject => {
+                const completed = subject.videos.filter(v => v.completed).length;
+                const progress = subject.videos.length ? (completed / subject.videos.length) * 100 : 0;
+                grid.innerHTML += `
+                    <div class="subject-card" onclick="showSubjectDetail('${subject.id}')">
+                        <div class="subject-icon">${subject.icon}</div>
+                        <h3 class="subject-title">${subject.name}</h3>
+                        <div class="subject-description">${subject.description}</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div>
+                        <div class="stats-info">
+                            <span><i class="fas fa-video"></i> ${subject.videos.length} فيديو</span>
+                            <span><i class="fas fa-file-pdf"></i> ${subject.pdfs.length} PDF</span>
+                            <span><i class="fas fa-check-circle"></i> ${completed}/${subject.videos.length}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function showSubjectDetail(subjectId) {
+            currentSubjectId = subjectId;
+            const subject = subjects[subjectId];
+            const completedCount = subject.videos.filter(v => v.completed).length;
+            const progress = subject.videos.length ? (completedCount / subject.videos.length) * 100 : 0;
+            
+            document.getElementById('subjectDetail').innerHTML = `
+                <h2>${subject.name}</h2>
+                <p style="margin: 10px 0;">${subject.description}</p>
+                <div class="progress-bar" style="margin: 20px 0;"><div class="progress-fill" style="width: ${progress}%"></div></div>
+                <div class="stats-info" style="margin-bottom: 20px;">
+                    <span>إجمالي الفيديوهات: ${subject.videos.length}</span>
+                    <span>إجمالي الملفات: ${subject.pdfs.length}</span>
+                    <span>المكتملة: ${completedCount}</span>
+                </div>
+            `;
+            
+            renderVideos(subjectId);
+            renderPDFs(subjectId);
+            
+            document.getElementById('subjectsPage').classList.add('hidden');
+            document.getElementById('subjectDetailPage').classList.remove('hidden');
+        }
+
+        function renderVideos(subjectId) {
+            const subject = subjects[subjectId];
+            const videosGrid = document.getElementById('videosGrid');
+            videosGrid.innerHTML = '';
+            
+            if (subject.videos.length === 0) {
+                videosGrid.innerHTML = '<div style="padding: 40px; background: rgba(0,0,0,0.4); border-radius: 28px; text-align: center;">لا توجد فيديوهات في هذه المادة حالياً</div>';
+                return;
+            }
+            
+            subject.videos.forEach((video, index) => {
+                const videoId = video.url ? video.url.split('v=')[1] : '';
+                const thumbnail = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : 'https://via.placeholder.com/300x180?text=Commerix';
+                
+                videosGrid.innerHTML += `
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="${thumbnail}" onerror="this.src='https://via.placeholder.com/300x180?text=Commerix'">
+                            <div class="video-play" onclick="watchVideo('${subjectId}', ${index})"><i class="fas fa-play"></i></div>
+                        </div>
+                        <div class="video-content">
+                            <h4 class="video-title">${video.title}</h4>
+                            <p style="color: #ccc; font-size: 13px;">${video.desc || ''}</p>
+                            <span style="color: #aaa;"><i class="far fa-clock"></i> ${video.duration}</span>
+                            <a href="${video.url}" target="_blank" class="youtube-link"><i class="fab fa-youtube"></i> مشاهدة على YouTube</a>
+                            <button class="complete-btn ${video.completed ? 'completed' : ''}" onclick="toggleComplete('${subjectId}', ${index})">
+                                ${video.completed ? '<i class="fas fa-check"></i> تم الإكمال' : '<i class="fas fa-check-circle"></i> تمت المشاهدة'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderPDFs(subjectId) {
+            const subject = subjects[subjectId];
+            const pdfsGrid = document.getElementById('pdfsGrid');
+            pdfsGrid.innerHTML = '';
+            
+            if (subject.pdfs.length === 0) {
+                pdfsGrid.innerHTML = '<div style="padding: 40px; background: rgba(0,0,0,0.4); border-radius: 28px; text-align: center;">لا توجد ملفات PDF في هذه المادة حالياً</div>';
+                return;
+            }
+            
+            subject.pdfs.forEach((pdf, index) => {
+                pdfsGrid.innerHTML += `
+                    <div class="pdf-card">
+                        <div class="pdf-thumbnail">
+                            <i class="fas fa-file-pdf"></i>
+                            <div class="pdf-view" onclick="viewPDF('${subjectId}', ${index})"><i class="fas fa-eye"></i></div>
+                            <div class="pdf-badge"><i class="fas fa-file-pdf"></i> PDF</div>
+                        </div>
+                        <div class="pdf-content">
+                            <h4 class="pdf-title">${pdf.title}</h4>
+                            <p style="color: #ccc; font-size: 13px;">${pdf.description || ''}</p>
+                            <div class="pdf-size"><i class="fas fa-database"></i> ${pdf.size || 'غير معروف'}</div>
+                            <button class="pdf-download" onclick="downloadPDF('${subjectId}', ${index})">
+                                <i class="fas fa-download"></i> تحميل الملف
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function switchTab(tab) {
+            const videosSection = document.getElementById('videosSection');
+            const pdfsSection = document.getElementById('pdfsSection');
+            const tabs = document.querySelectorAll('.section-tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'videos') {
+                videosSection.classList.add('active');
+                pdfsSection.classList.remove('active');
+                tabs[0].classList.add('active');
+            } else {
+                videosSection.classList.remove('active');
+                pdfsSection.classList.add('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function watchVideo(subjectId, videoIndex) {
+            window.open(subjects[subjectId].videos[videoIndex].url, '_blank');
+        }
+
+        function toggleComplete(subjectId, videoIndex) {
+            subjects[subjectId].videos[videoIndex].completed = !subjects[subjectId].videos[videoIndex].completed;
+            saveData();
+            updateStats();
+            showSubjectDetail(subjectId);
+            renderSubjects();
+        }
+
+        // PDF Functions
+        function viewPDF(subjectId, pdfIndex) {
+            const pdf = subjects[subjectId].pdfs[pdfIndex];
+            document.getElementById('pdfModalTitle').innerText = pdf.title;
+            document.getElementById('pdfModal').style.display = 'flex';
+            
+            if (pdf.data) {
+                displayPDF(pdf.data);
+            } else if (pdf.url) {
+                fetch(pdf.url)
+                    .then(response => response.arrayBuffer())
+                    .then(data => {
+                        pdf.data = data;
+                        displayPDF(data);
+                    })
+                    .catch(err => {
+                        showToast('حدث خطأ في تحميل الملف', 'error');
+                    });
+            } else {
+                showToast('لا يمكن عرض الملف', 'error');
+            }
+        }
+
+        function displayPDF(data) {
+            const loadingTask = pdfjsLib.getDocument({ data: data });
+            loadingTask.promise.then(pdf => {
+                currentPdfDoc = pdf;
+                currentPage = 1;
+                renderPage(currentPage);
+            });
+        }
+
+        function renderPage(num) {
+            currentPdfDoc.getPage(num).then(page => {
+                const scale = 1.5;
+                const viewport = page.getViewport({ scale: scale });
+                const canvas = document.getElementById('pdfCanvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+                document.getElementById('pageNumInfo').innerText = `الصفحة ${num} / ${currentPdfDoc.numPages}`;
+            });
+        }
+
+        function prevPage() {
+            if (currentPage <= 1) return;
+            currentPage--;
+            renderPage(currentPage);
+        }
+
+        function nextPage() {
+            if (currentPage >= currentPdfDoc.numPages) return;
+            currentPage++;
+            renderPage(currentPage);
+        }
+
+        function downloadPDF(subjectId, pdfIndex) {
+            const pdf = subjects[subjectId].pdfs[pdfIndex];
+            if (pdf.data) {
+                const blob = new Blob([pdf.data], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = pdf.fileName || `${pdf.title}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('جاري تحميل الملف...', 'success');
+            } else {
+                showToast('لا يمكن تحميل الملف', 'error');
+            }
+        }
+
+        function closePdfModal() {
+            document.getElementById('pdfModal').style.display = 'none';
+            currentPdfDoc = null;
+        }
+
+        function showPage(page) {
+            const pages = ['homePage', 'subjectsPage', 'subjectDetailPage', 'aboutPage'];
+            pages.forEach(p => {
+                const el = document.getElementById(p);
+                if (el) el.classList.add('hidden');
+            });
+            if (page === 'home') document.getElementById('homePage').classList.remove('hidden');
+            else if (page === 'subjects') { renderSubjects(); document.getElementById('subjectsPage').classList.remove('hidden'); }
+            else if (page === 'about') document.getElementById('aboutPage').classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+        }
+
+        // Admin Functions
+        function updateAdminSelects() {
+            const select = document.getElementById('subjectSelect');
+            const pdfSelect = document.getElementById('pdfSubjectSelect');
+            const filterVideo = document.getElementById('filterSubjectVideo');
+            const filterPdf = document.getElementById('filterSubjectPdf');
+            
+            [select, pdfSelect, filterVideo, filterPdf].forEach(sel => {
+                if (sel) {
+                    sel.innerHTML = '<option value="">اختر المادة</option>';
+                    Object.values(subjects).forEach(subject => {
+                        sel.innerHTML += `<option value="${subject.id}">${subject.name}</option>`;
+                    });
+                    if (filterVideo) filterVideo.innerHTML = '<option value="all">جميع المواد</option>' + 
+                        Object.values(subjects).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                    if (filterPdf) filterPdf.innerHTML = '<option value="all">جميع المواد</option>' + 
+                        Object.values(subjects).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                }
+            });
+        }
+
+        function renderAdminVideos() {
+            const searchTerm = document.getElementById('searchVideo')?.value.toLowerCase() || '';
+            const filterSubject = document.getElementById('filterSubjectVideo')?.value || 'all';
+            const tableDiv = document.getElementById('videosTable');
+            if (!tableDiv) return;
+            
+            let filteredVideos = [];
+            Object.values(subjects).forEach(subject => {
+                if (filterSubject === 'all' || filterSubject === subject.id) {
+                    subject.videos.forEach((video, idx) => {
+                        if (searchTerm === '' || video.title.toLowerCase().includes(searchTerm)) {
+                            filteredVideos.push({ ...video, subjectName: subject.name, subjectId: subject.id, index: idx });
+                        }
+                    });
+                }
+            });
+            
+            if (filteredVideos.length === 0) {
+                tableDiv.innerHTML = `<div class="empty-state"><i class="fas fa-video-slash"></i><p>لا توجد فيديوهات</p></div>`;
+                return;
+            }
+            
+            let html = `<table class="videos-table"><thead><tr><th>المادة</th><th>العنوان</th><th>المدة</th><th>الإجراءات</th></tr></thead><tbody>`;
+            filteredVideos.forEach(video => {
+                html += `
+                    <tr>
+                        <td><i class="fas fa-folder-open"></i> ${video.subjectName}</td>
+                        <td><strong>${video.title}</strong><br><small style="color:#aaa;">${video.desc?.substring(0, 50) || ''}</small></td>
+                        <td><i class="far fa-clock"></i> ${video.duration}</td>
+                        <td class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editVideo('${video.subjectId}', ${video.index})"><i class="fas fa-edit"></i> تعديل</button>
+                            <button class="btn-icon btn-delete" onclick="deleteVideo('${video.subjectId}', ${video.index})"><i class="fas fa-trash"></i> حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            html += `</tbody></table>`;
+            tableDiv.innerHTML = html;
+        }
+
+        function renderAdminPDFs() {
+            const searchTerm = document.getElementById('searchPdf')?.value.toLowerCase() || '';
+            const filterSubject = document.getElementById('filterSubjectPdf')?.value || 'all';
+            const tableDiv = document.getElementById('pdfsTable');
+            if (!tableDiv) return;
+            
+            let filteredPDFs = [];
+            Object.values(subjects).forEach(subject => {
+                if (filterSubject === 'all' || filterSubject === subject.id) {
+                    subject.pdfs.forEach((pdf, idx) => {
+                        if (searchTerm === '' || pdf.title.toLowerCase().includes(searchTerm)) {
+                            filteredPDFs.push({ ...pdf, subjectName: subject.name, subjectId: subject.id, index: idx });
+                        }
+                    });
+                }
+            });
+            
+            if (filteredPDFs.length === 0) {
+                tableDiv.innerHTML = `<div class="empty-state"><i class="fas fa-file-pdf"></i><p>لا توجد ملفات PDF</p></div>`;
+                return;
+            }
+            
+            let html = `<table class="pdfs-table"><thead><tr><th>المادة</th><th>العنوان</th><th>الحجم</th><th>الإجراءات</th></tr></thead><tbody>`;
+            filteredPDFs.forEach(pdf => {
+                html += `
+                    <tr>
+                        <td><i class="fas fa-folder-open"></i> ${pdf.subjectName}</td>
+                        <td><strong>${pdf.title}</strong><br><small style="color:#aaa;">${pdf.description?.substring(0, 50) || ''}</small></td>
+                        <td>${pdf.size || 'غير معروف'}</td>
+                        <td class="action-buttons">
+                            <button class="btn-icon btn-view" onclick="viewPDFAdmin('${pdf.subjectId}', ${pdf.index})"><i class="fas fa-eye"></i> معاينة</button>
+                            <button class="btn-icon btn-delete" onclick="deletePDF('${pdf.subjectId}', ${pdf.index})"><i class="fas fa-trash"></i> حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            html += `</tbody></table>`;
+            tableDiv.innerHTML = html;
+        }
+
+        function editVideo(subjectId, videoIndex) {
+            const video = subjects[subjectId].videos[videoIndex];
+            document.getElementById('subjectSelect').value = subjectId;
+            document.getElementById('videoTitle').value = video.title;
+            document.getElementById('videoDesc').value = video.desc || '';
+            document.getElementById('videoUrl').value = video.url;
+            document.getElementById('videoDuration').value = video.duration;
+            document.getElementById('editVideoId').value = `${subjectId}|${videoIndex}`;
+            document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> تعديل الفيديو';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteVideo(subjectId, videoIndex) {
+            if (confirm('⚠️ هل أنت متأكد من حذف هذا الفيديو؟')) {
+                subjects[subjectId].videos.splice(videoIndex, 1);
+                saveData();
+                renderAdminVideos();
+                updateStats();
+                renderSubjects();
+                if (currentSubjectId === subjectId) showSubjectDetail(subjectId);
+                showToast('تم حذف الفيديو بنجاح', 'success');
+            }
+        }
+
+        function deletePDF(subjectId, pdfIndex) {
+            if (confirm('⚠️ هل أنت متأكد من حذف هذا الملف؟')) {
+                subjects[subjectId].pdfs.splice(pdfIndex, 1);
+                saveData();
+                renderAdminPDFs();
+                updateStats();
+                renderSubjects();
+                if (currentSubjectId === subjectId) showSubjectDetail(subjectId);
+                showToast('تم حذف الملف بنجاح', 'success');
+            }
+        }
+
+        function viewPDFAdmin(subjectId, pdfIndex) {
+            viewPDF(subjectId, pdfIndex);
+        }
+
+        function clearVideoForm() {
+            document.getElementById('subjectSelect').value = '';
+            document.getElementById('videoTitle').value = '';
+            document.getElementById('videoDesc').value = '';
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('videoDuration').value = '';
+            document.getElementById('editVideoId').value = '';
+            document.getElementById('formTitle').innerHTML = '<i class="fas fa-video-plus"></i> إضافة فيديو جديد';
+        }
+
+        function clearPdfForm() {
+            document.getElementById('pdfSubjectSelect').value = '';
+            document.getElementById('pdfTitle').value = '';
+            document.getElementById('pdfDesc').value = '';
+            document.getElementById('pdfFile').value = '';
+            document.getElementById('editPdfId').value = '';
+        }
+
+        function saveVideo(event) {
+            event.preventDefault();
+            
+            const subjectId = document.getElementById('subjectSelect').value;
+            const title = document.getElementById('videoTitle').value.trim();
+            const desc = document.getElementById('videoDesc').value;
+            const url = document.getElementById('videoUrl').value.trim();
+            const duration = document.getElementById('videoDuration').value.trim();
+            const editId = document.getElementById('editVideoId').value;
+            
+            if (!subjectId || !title || !url) {
+                showToast('الرجاء ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+            
+            const newVideo = {
+                id: Date.now(),
+                title: title,
+                desc: desc,
+                url: url,
+                duration: duration || '00:00',
+                completed: false,
+                difficulty: 'متوسط',
+                views: 0
+            };
+            
+            if (editId) {
+                const [sId, vIdx] = editId.split('|');
+                subjects[sId].videos[parseInt(vIdx)] = newVideo;
+                showToast('تم تحديث الفيديو بنجاح', 'success');
+            } else {
+                subjects[subjectId].videos.push(newVideo);
+                showToast('تم إضافة الفيديو بنجاح', 'success');
+            }
+            
+            saveData();
+            clearVideoForm();
+            renderAdminVideos();
+            updateStats();
+            renderSubjects();
+            if (currentSubjectId === subjectId) showSubjectDetail(subjectId);
+        }
+
+        function savePDF(event) {
+            event.preventDefault();
+            
+            const subjectId = document.getElementById('pdfSubjectSelect').value;
+            const title = document.getElementById('pdfTitle').value.trim();
+            const description = document.getElementById('pdfDesc').value;
+            const fileInput = document.getElementById('pdfFile');
+            const file = fileInput.files[0];
+            
+            if (!subjectId || !title || !file) {
+                showToast('الرجاء ملء جميع الحقول واختيار ملف PDF', 'error');
+                return;
+            }
+            
+            if (file.type !== 'application/pdf') {
+                showToast('الرجاء اختيار ملف PDF صالح', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const pdfData = e.target.result;
+                const newPDF = {
+                    id: Date.now(),
+                    title: title,
+                    description: description,
+                    fileName: file.name,
+                    size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+                    data: pdfData,
+                    url: ''
+                };
+                
+                subjects[subjectId].pdfs.push(newPDF);
+                saveData();
+                clearPdfForm();
+                renderAdminPDFs();
+                updateStats();
+                renderSubjects();
+                if (currentSubjectId === subjectId) showSubjectDetail(subjectId);
+                showToast('تم رفع الملف بنجاح', 'success');
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function setupSearchListeners() {
+            const searchVideo = document.getElementById('searchVideo');
+            const filterVideo = document.getElementById('filterSubjectVideo');
+            const searchPdf = document.getElementById('searchPdf');
+            const filterPdf = document.getElementById('filterSubjectPdf');
+            
+            if (searchVideo) searchVideo.addEventListener('input', () => renderAdminVideos());
+            if (filterVideo) filterVideo.addEventListener('change', () => renderAdminVideos());
+            if (searchPdf) searchPdf.addEventListener('input', () => renderAdminPDFs());
+            if (filterPdf) filterPdf.addEventListener('change', () => renderAdminPDFs());
+        }
+
+        // Auth Functions
+        let currentRole = null;
+        
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.querySelector('.toggle-password i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        function selectRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            if (role === 'student') document.querySelector('.role-btn.student').classList.add('active');
+            else document.querySelector('.role-btn.admin').classList.add('active');
+        }
+        
+        function login() {
+            const isStudent = document.querySelector('.role-btn.student').classList.contains('active');
+            const password = document.getElementById('password').value;
+            const correctPassword = isStudent ? 'student123' : 'admin123';
+            
+            if (password === correctPassword) {
+                currentRole = isStudent ? 'student' : 'admin';
+                document.getElementById('lockScreen').classList.add('hidden');
+                document.getElementById('appContainer').style.display = 'block';
+                
+                if (isStudent) {
+                    document.getElementById('studentPages').style.display = 'block';
+                    document.getElementById('adminPanel').style.display = 'none';
+                    showPage('home');
+                    updateStats();
+                    renderSubjects();
+                } else {
+                    document.getElementById('studentPages').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    updateAdminSelects();
+                    renderAdminVideos();
+                    renderAdminPDFs();
+                    setupSearchListeners();
+                    updateStats();
+                }
+            } else {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 2000);
+                document.getElementById('password').value = '';
+            }
+        }
+        
+        function logout() {
+            currentRole = null;
+            document.getElementById('lockScreen').classList.remove('hidden');
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('password').value = '';
+            document.querySelector('.role-btn.student').classList.add('active');
+            document.querySelector('.role-btn.admin').classList.remove('active');
+            closePdfModal();
+        }
+
+        // Particles Animation
+        const canvas = document.getElementById('particlesCanvas');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+        
+        function resizeCanvas() {
+            w = window.innerWidth;
+            h = window.innerHeight;
+            canvas.width = w;
+            canvas.height = h;
+        }
+        
+        function initParticles(count = 80) {
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    radius: Math.random() * 3 + 1,
+                    alpha: Math.random() * 0.5 + 0.2,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.3
+                });
+            }
+        }
+        
+        function drawParticles() {
+            ctx.clearRect(0, 0, w, h);
+            for (let p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.fill();
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = w;
+                if (p.x > w) p.x = 0;
+                if (p.y < 0) p.y = h;
+                if (p.y > h) p.y = 0;
+            }
+            requestAnimationFrame(drawParticles);
+        }
+        
+        // Initialize
+        function init() {
+            loadData();
+            updateStats();
+            renderSubjects();
+            
+            const videoForm = document.getElementById('videoForm');
+            const pdfForm = document.getElementById('pdfForm');
+            if (videoForm) videoForm.addEventListener('submit', saveVideo);
+            if (pdfForm) pdfForm.addEventListener('submit', savePDF);
+            
+            resizeCanvas();
+            initParticles(80);
+            drawParticles();
+            window.addEventListener('resize', () => { resizeCanvas(); initParticles(80); });
+        }
+        
+        init();
+    </script>
+</body>
+</html>
